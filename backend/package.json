@@ -6,10 +6,9 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "npx prisma generate && npx prisma db push",
-    "start": "npx ts-node --transpile-only --skip-project src/server.ts",
+    "start": "node -e \"require('ts-node').register({transpileOnly:true,compilerOptions:{module:'commonjs',esModuleInterop:true,skipLibCheck:true}});require('./src/server.ts')\"",
     "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push",
-    "seed": "ts-node src/utils/seed.ts"
+    "prisma:push": "prisma db push"
   },
   "dependencies": {
     "@prisma/client": "^5.10.0",
