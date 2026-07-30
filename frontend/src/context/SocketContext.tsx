@@ -41,7 +41,14 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   useEffect(() => {
-    const s = io(window.location.origin, {
+    const getSocketTarget = () => {
+      if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        return 'https://campusfetch.onrender.com';
+      }
+      return window.location.origin;
+    };
+
+    const s = io(getSocketTarget(), {
       transports: ['websocket', 'polling'],
     });
 

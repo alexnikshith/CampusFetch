@@ -1,9 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api';
+const getBaseUrl = () => {
+  const metaEnv = (import.meta as any).env;
+  if (metaEnv && metaEnv.VITE_API_URL) return metaEnv.VITE_API_URL;
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return 'https://campusfetch.onrender.com/api';
+  }
+  return '/api';
+};
 
 export const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
