@@ -31,21 +31,15 @@ export const AuthPage: React.FC = () => {
     try {
       const res = await requestOtp(email || 'student@cb.amrita.edu');
       if (res && res.success !== false) {
-        const code = res.devOtp || '123456';
-        setDevOtpCode(code);
-        setOtp(code);
+        // Only store devOtp for display - never auto-fill (user must type OTP from email)
+        if (res.devOtp) setDevOtpCode(res.devOtp);
+        setOtp('');
         setStep('OTP');
       } else {
-        const fallbackCode = '123456';
-        setDevOtpCode(fallbackCode);
-        setOtp(fallbackCode);
-        setStep('OTP');
+        setError(res?.error || 'Failed to send OTP. Please check your internet connection and try again.');
       }
     } catch (err: any) {
-      const fallbackCode = '123456';
-      setDevOtpCode(fallbackCode);
-      setOtp(fallbackCode);
-      setStep('OTP');
+      setError('Unable to reach the server. Please try again in a few seconds.');
     } finally {
       setLoading(false);
     }
@@ -266,12 +260,13 @@ export const AuthPage: React.FC = () => {
           <form onSubmit={handleVerifyOtp} className="space-y-4 text-center">
             <div className="bg-rose-50 border border-rose-200 p-3 rounded-2xl">
               <p className="text-xs text-slate-700">
-                Verification OTP dispatched to: <br />
+                Verification OTP sent to: <br />
                 <span className="font-bold text-[#8c182b]">{email}</span>
               </p>
-              {devOtpCode && (
+              <p className="text-[11px] text-slate-500 mt-1">📬 Check your inbox (and spam folder). The OTP expires in 10 minutes.</p>
+              {devOtpCode && window.location.hostname === 'localhost' && (
                 <div className="mt-2 bg-amber-100 border border-amber-300 p-1.5 rounded-lg text-[11px] text-amber-900 flex items-center justify-center gap-2 font-bold">
-                  <span>Dev Mock OTP: {devOtpCode}</span>
+                  <span>Dev OTP (localhost only): {devOtpCode}</span>
                   <button
                     type="button"
                     onClick={() => setOtp(devOtpCode)}
