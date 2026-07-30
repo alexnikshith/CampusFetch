@@ -1,0 +1,180 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model University {
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique
+  domain    String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  stores    Store[]
+  users     User[]
+}
+
+model User {
+  id               String       @id @default(uuid())
+  universityId     String?
+  university       University?  @relation(fields: [universityId], references: [id])
+  username         String       @unique
+  fullName         String
+  email            String       @unique
+  phone            String
+  gender           String
+  department       String
+  year             String
+  hostel           String
+  roomNumber       String
+  role             String       @default("CUSTOMER") // CUSTOMER, RUNNER, ADMIN
+  trustScore       Float        @default(85.0)
+  walletBalance    Float        @default(150.0)
+  profilePic       String?
+  isVerified       Boolean      @default(true)
+  status           String       @default("ACTIVE") // ACTIVE, SUSPENDED
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  customerOrders   Order[]      @relation("CustomerOrders")
+  runnerOrders     Order[]      @relation("RunnerOrders")
+  runnerTrips      RunnerTrip[]
+  sentMessages     ChatMessage[] @relation("SentMessages")
+  receivedMessages ChatMessage[] @relation("ReceivedMessages")
+  transactions     Transaction[]
+  ratingsGiven     Rating[]     @relation("RatingsGiven")
+  ratingsReceived  Rating[]     @relation("RatingsReceived")
+  notifications    Notification[]
+}
+
+model Store {
+  id               String       @id @default(uuid())
+  universityId     String?
+  university       University?  @relation(fields: [universityId], references: [id])
+  name             String
+  category         String       // CANTEEN, GENERAL, STATIONERY, PHARMACY
+  location         String
+  image            String?
+  operatingHours   String       @default("08:00 AM - 10:00 PM")
+  isOpen           Boolean      @default(true)
+  deliveryFeeBase  Float        @default(10.0)
+  rating           Float        @default(4.8)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  orders           Order[]
+  runnerTrips      RunnerTrip[]
+}
+
+model Order {
+  id                   String       @id @default(uuid())
+  orderNumber          String       @unique
+  customerId           String
+  customer             User         @relation("CustomerOrders", fields: [customerId], references: [id])
+  storeId              String
+  store                Store        @relation(fields: [storeId], references: [id])
+  runnerId             String?
+  runner               User?        @relation("RunnerOrders", fields: [runnerId], references: [id])
+  status               String       @default("PENDING") // PENDING, ACCEPTED, SHOPPING, ON_THE_WAY, DELIVERED, REJECTED, CANCELLED, EXPIRED
+  paymentMethod        String       @default("UPI") // UPI, CASH
+  priority             String       @default("NORMAL") // NORMAL, URGENT
+  items                String       // JSON string of item list: [{name, qty, approxPrice}]
+  maxBudget            Float
+  estimatedCost        Float
+  deliveryFee          Float
+  deliveryOtp          String
+  receiptUrl           String?
+  notes                String?
+  expectedDeliveryTime String
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  messages             ChatMessage[]
+  transactions         Transaction[]
+  ratings              Rating[]
+}
+
+model RunnerTrip {
+  id               String   @id @default(uuid())
+  runnerId         String
+  runner           User     @relation(fields: [runnerId], references: [id])
+  storeId          String
+  store            Store    @relation(fields: [storeId], references: [id])
+  estimatedArrival String
+  availableDuration String
+  maxOrders        Int      @default(3)
+  status           String   @default("ACTIVE") // ACTIVE, COMPLETED, CANCELLED
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model ChatMessage {
+  id         String   @id @default(uuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id])
+  senderId   String
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  message    String
+  type       String   @default("TEXT") // TEXT, UPDATE, IMAGE
+  createdAt  DateTime @default(now())
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  orderId     String?
+  order       Order?   @relation(fields: [orderId], references: [id])
+  type        String   // EARNING, SPEND, CASHBACK, WITHDRAWAL, REFERRAL
+  amount      Float
+  description String
+  status      String   @default("COMPLETED") // COMPLETED, PENDING, FAILED
+  createdAt   DateTime @default(now())
+}
+
+model Rating {
+  id         String   @id @default(uuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id])
+  fromUserId String
+  fromUser   User     @relation("RatingsGiven", fields: [fromUserId], references: [id])
+  toUserId   String
+  toUser     User     @relation("RatingsReceived", fields: [toUserId], references: [id])
+  rating     Float
+  comment    String?
+  targetType String   @default("RUNNER") // RUNNER, CUSTOMER, STORE
+  createdAt  DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  body      String
+  type      String   @default("INFO")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model OtpRecord {
+  id        String   @id @default(uuid())
+  email     String
+  otp       String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SystemConfig {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+}

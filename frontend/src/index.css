@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-100 text-slate-900 font-sans antialiased;
+  }
+}
+
+/* Amrita Crimson Red & White Design Token Styles */
+.amrita-header {
+  background: #8c182b;
+  color: #ffffff;
+}
+
+.amrita-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.amrita-card-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.amrita-card-hover:hover {
+  border-color: #a41d35;
+  box-shadow: 0 10px 20px -5px rgba(140, 24, 43, 0.15);
+  transform: translateY(-1.5px);
+}
+
+.amrita-button {
+  background: linear-gradient(135deg, #a41d35 0%, #8c182b 100%);
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.amrita-button:hover {
+  background: linear-gradient(135deg, #8c182b 0%, #731222 100%);
+  box-shadow: 0 4px 12px rgba(140, 24, 43, 0.3);
+}
+
+.amrita-text-gradient {
+  background: linear-gradient(135deg, #8c182b 0%, #a41d35 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 24, 43, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 24, 43, 0.6);
+}
