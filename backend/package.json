@@ -2,11 +2,11 @@
   "name": "campusfetch-backend",
   "version": "1.0.0",
   "description": "CampusFetch Peer-to-Peer Campus Logistics Backend API Server",
-  "main": "dist/server.js",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "npx prisma generate && npx prisma db push && npx tsc --module commonjs --moduleResolution node --target ES2020 --outDir dist --rootDir src --esModuleInterop true --skipLibCheck true --strict false --resolveJsonModule true",
-    "start": "node dist/server.js",
+    "build": "npx prisma generate && npx prisma db push",
+    "start": "npx ts-node --transpile-only --skip-project src/server.ts",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "seed": "ts-node src/utils/seed.ts"
@@ -32,6 +32,6 @@
     "prisma": "^5.10.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "5.3.3"
+    "typescript": "^5.3.3"
   }
 }

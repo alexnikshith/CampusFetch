@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "CommonJS",
-    "moduleResolution": "node",
+    "moduleResolution": "node10",
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": false,
@@ -10,6 +10,15 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "skipProject": true,
+    "compilerOptions": {
+      "module": "CommonJS",
+      "moduleResolution": "node10",
+      "esModuleInterop": true
+    }
   },
   "include": ["src/**/*"]
 }
