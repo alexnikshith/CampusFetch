@@ -12,7 +12,7 @@ export const ProfilePage: React.FC = () => {
   const [year, setYear] = useState(user?.year || '');
   const [hostel, setHostel] = useState(user?.hostel || '');
   const [roomNumber, setRoomNumber] = useState(user?.roomNumber || '');
-  const [role, setRole] = useState(user?.role || 'CUSTOMER');
+  const [role, setRole] = useState(user?.role || 'STUDENT');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -167,15 +167,14 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-[11px] font-bold text-slate-700 mb-1">Primary Operational Role</label>
+          <label className="block text-[11px] font-bold text-slate-700 mb-1">Account Role</label>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value as any)}
             className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#8c182b]"
           >
-            <option value="CUSTOMER">Customer (Places item requests)</option>
-            <option value="RUNNER">Runner (Accepts & delivers items)</option>
-            <option value="ADMIN">Admin (Platform management)</option>
+            <option value="STUDENT">Student (Places item requests & delivers for peers)</option>
+            <option value="ADMIN">Admin (Platform governance)</option>
           </select>
         </div>
 

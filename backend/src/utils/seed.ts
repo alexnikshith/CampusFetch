@@ -58,8 +58,8 @@ export const seedDatabase = async () => {
       name: 'Pool Canteen',
       category: 'CANTEEN',
       location: 'Sports Complex & Swimming Pool',
-      image: 'https://images.unsplash.com/photo-1578474846511-04ba529f0b88?w=500',
-      operatingHours: '04:00 PM - 09:00 PM',
+      image: 'https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=500',
+      operatingHours: '09:00 AM - 07:00 PM',
       deliveryFeeBase: 10.0,
       rating: 4.5,
     },
@@ -67,26 +67,26 @@ export const seedDatabase = async () => {
       name: 'General Store',
       category: 'GENERAL',
       location: 'Central Student Amenities Center',
-      image: 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=500',
+      image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=500',
       operatingHours: '08:00 AM - 09:00 PM',
       deliveryFeeBase: 10.0,
       rating: 4.8,
     },
     {
-      name: 'Stationery',
+      name: 'Stationery & Book Store',
       category: 'STATIONERY',
-      location: 'Behind Library Block',
-      image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=500',
-      operatingHours: '09:00 AM - 06:00 PM',
-      deliveryFeeBase: 7.0,
+      location: 'Academic Block 3 Basement',
+      image: 'https://images.unsplash.com/photo-1568667256549-094345857637?w=500',
+      operatingHours: '08:30 AM - 06:30 PM',
+      deliveryFeeBase: 8.0,
       rating: 4.6,
     },
     {
-      name: 'Xerox Center',
+      name: 'Xerox & DTP Center',
       category: 'STATIONERY',
-      location: 'Academic Block 2 Basement',
-      image: 'https://images.unsplash.com/photo-1568667256549-094345857637?w=500',
-      operatingHours: '08:30 AM - 08:30 PM',
+      location: 'Library Ground Floor',
+      image: 'https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?w=500',
+      operatingHours: '08:00 AM - 08:00 PM',
       deliveryFeeBase: 5.0,
       rating: 4.7,
     },
@@ -113,7 +113,7 @@ export const seedDatabase = async () => {
     }
   }
 
-  // 3. Create Pre-seeded Users
+  // 3. Create Pre-seeded Users (All students are STUDENT role)
   const users = [
     {
       username: 'admin',
@@ -139,7 +139,7 @@ export const seedDatabase = async () => {
       year: '3rd Year',
       hostel: 'Vashishta Hostel',
       roomNumber: '304',
-      role: 'CUSTOMER',
+      role: 'STUDENT',
       trustScore: 92.0,
       walletBalance: 280.0,
     },
@@ -153,7 +153,7 @@ export const seedDatabase = async () => {
       year: '4th Year',
       hostel: 'Agastya Hostel',
       roomNumber: '212',
-      role: 'RUNNER',
+      role: 'STUDENT',
       trustScore: 96.5,
       walletBalance: 450.0,
     },
@@ -169,8 +169,19 @@ export const seedDatabase = async () => {
           isVerified: true,
         },
       });
+    } else {
+      await prisma.user.update({
+        where: { id: existing.id },
+        data: { role: u.role },
+      });
     }
   }
+
+  // Convert any remaining non-ADMIN users to STUDENT role
+  await prisma.user.updateMany({
+    where: { role: { not: 'ADMIN' } },
+    data: { role: 'STUDENT' },
+  });
 
   console.log('[Seed] Database seeding completed successfully.');
 };
@@ -178,8 +189,8 @@ export const seedDatabase = async () => {
 if (require.main === module) {
   seedDatabase()
     .then(() => process.exit(0))
-    .catch((err) => {
-      console.error('Seed error:', err);
+    .catch((e) => {
+      console.error(e);
       process.exit(1);
     });
 }

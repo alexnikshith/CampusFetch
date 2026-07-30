@@ -63,36 +63,26 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({ children }) => {
           </button>
         </div>
 
-        {/* Demo Role Account Switcher */}
+        {/* Demo Role Account Switcher (Student & Admin) */}
         <div className="flex items-center gap-2">
           <span className="text-rose-100 hidden sm:inline flex items-center gap-1 font-semibold">
             <UserCheck className="w-3 h-3 text-amber-300" /> Switch Demo Role:
           </span>
           <button
             onClick={() => switchDemoUser('nikshith@cb.amrita.edu')}
-            className={`px-2.5 py-1 rounded-md text-[11px] font-bold border transition ${
-              user?.role === 'CUSTOMER'
+            className={`px-3 py-1 rounded-md text-[11px] font-extrabold border transition ${
+              user?.role === 'STUDENT'
                 ? 'bg-white text-[#8c182b] border-white shadow'
                 : 'bg-black/20 text-white border-white/20 hover:bg-black/30'
             }`}
           >
-            Customer
-          </button>
-          <button
-            onClick={() => switchDemoUser('rahul@cb.amrita.edu')}
-            className={`px-2.5 py-1 rounded-md text-[11px] font-bold border transition ${
-              user?.role === 'RUNNER'
-                ? 'bg-amber-400 text-slate-950 border-amber-300 shadow'
-                : 'bg-black/20 text-white border-white/20 hover:bg-black/30'
-            }`}
-          >
-            Runner
+            Student
           </button>
           <button
             onClick={() => switchDemoUser('admin@amrita.edu')}
-            className={`px-2.5 py-1 rounded-md text-[11px] font-bold border transition ${
+            className={`px-3 py-1 rounded-md text-[11px] font-extrabold border transition ${
               user?.role === 'ADMIN'
-                ? 'bg-purple-200 text-purple-950 border-white shadow'
+                ? 'bg-amber-400 text-slate-950 border-amber-300 shadow'
                 : 'bg-black/20 text-white border-white/20 hover:bg-black/30'
             }`}
           >
